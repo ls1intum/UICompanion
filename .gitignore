@@ -1,0 +1,11 @@
+# Environments
+.env
+
+# Node
+node_modules
+
+# MongoDB
+mongo-data
+
+# Misc
+.DS_Store
