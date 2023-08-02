@@ -9,9 +9,15 @@
     "prettier:format": "prettier --write '**/*.{js,jsx,ts,tsx,css,json}' "
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.5",
+    "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-figma-ui": "^1.1.0"
+    "react-figma-ui": "^1.1.0",
+    "react-router": "^6.14.2",
+    "react-router-dom": "^6.14.2"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.50.0",
