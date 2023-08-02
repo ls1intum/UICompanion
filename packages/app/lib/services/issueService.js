@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.persistIssue = void 0;
 var axios_1 = __importDefault(require("axios"));
+var IssueStatus_1 = require("../models/IssueStatus");
 function persistIssue(app, issue, probotContext) {
     return __awaiter(this, void 0, void 0, function () {
         var data;
@@ -49,7 +50,7 @@ function persistIssue(app, issue, probotContext) {
             data = {
                 "title": issue.title,
                 "description": issue.body,
-                "status": issue.state
+                "status": IssueStatus_1.IssueStatus.OPEN
             };
             console.log('test', issue);
             axios_1.default.post('http://uicompanion-server:3001/api/issues', data, {
