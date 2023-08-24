@@ -5,7 +5,6 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 RUN npm i
-RUN npm run build
 
 ENV NODE_ENV="production"
 

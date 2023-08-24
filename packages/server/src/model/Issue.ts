@@ -4,6 +4,7 @@ export interface IIssue extends Document {
     title: string;
     description: string;
     status: string;
+    frames: string[];
 }
 
 const issueSchema = new Schema({
@@ -18,7 +19,11 @@ const issueSchema = new Schema({
     status: {
         type: String,
         required: true,
-        enum: ['open', 'closed'],
+        enum: ['Open', 'In Progress', 'In Review', 'Approved'],
+    },
+    frames: {
+        type: [String],
+        required: true,
     },
 });
 
