@@ -1,20 +1,21 @@
 import axios from 'axios';
 import { Context, Probot } from 'probot';
-import { Issue } from "@octokit/webhooks-types"
+import { Issue as GitHubIssue } from "@octokit/webhooks-types"
+import { IssueStatus } from '../models/IssueStatus';
+import { Issue } from '../models/Issue';
 
 
 export async function persistIssue(
     app: Probot,
-    issue: Issue, 
+    issue: GitHubIssue, 
     probotContext: Context
 ): Promise<void> {
-  let data = {
-    "title": issue.title,
-    "description": issue.body,
-    "status": issue.state
+  let data: Issue = {
+    title: issue.title,
+    description: issue.body || '',
+    status: IssueStatus.OPEN,
+    frames: []
   };
-
-  console.log('test', issue)
 
   axios.post(
     'http://uicompanion-server:3001/api/issues',
@@ -27,8 +28,6 @@ export async function persistIssue(
   )
   .then(async (response) => {
     app.log.debug("POST /api/issues status code: ", response.data);
-
-    console.log(response)
 
     const issueComment = probotContext.issue({
         body: "Thanks for opening this issue!",
