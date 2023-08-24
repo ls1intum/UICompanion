@@ -19,11 +19,11 @@ jobs:
         include:
           - dockerfile: ./packages/app/Dockerfile
             image: ghcr.io/ls1intum/UICompanion/uicompanion-app
-            context: ./app
+            context: ./packages/app
             path: app
           - dockerfile: ./packages/server/Dockerfile
             image: ghcr.io/ls1intum/UICompanion/uicompanion-server
-            context: ./server
+            context: ./packages/server
             path: server
     outputs:
       server_image_tag: "${{ steps.output-tag-server.outputs.server_image_tag }}"

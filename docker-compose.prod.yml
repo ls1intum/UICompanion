@@ -3,16 +3,22 @@ services:
   reverse-proxy:  
     image: traefik:v2.10
     command:
+      # Docker configuration
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      # Configure entrypoint
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      # Global HTTP -> HTTPS
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # SSL configuration
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=benedikt.geisberger@tum.de"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # Enable dashboard
+      - "--api.dashboard=true"
     restart: unless-stopped
     ports:
       - "80:80"
@@ -35,7 +41,8 @@ services:
     container_name: uicompanion-server
     depends_on:
       - mongodb
-    image: ghcr.io/bgeisb/uicompanionserver:latest
+      - reverse-proxy
+    image: ghcr.io/ls1intum/uicompanion/uicompanion-server:${SERVER_IMAGE_TAG}
     restart: on-failure
     environment:
       - MONGODB_USER=$MONGODB_USER
@@ -45,16 +52,17 @@ services:
       - MONGODB_PORT=27017
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.client.rule=Host(`${SERVER_HOST}`) && PathPrefix(`/api`)"
-      - "traefik.http.services.server.loadbalancer.server.port=3000"
-      - "traefik.http.routers.client.entrypoints=websecure"
-      - "traefik.http.routers.client.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.server.rule=Host(`${HOST_ALIAS}`) && PathPrefix(`/api`)"
+      - "traefik.http.services.server.loadbalancer.server.port=3001"
+      - "traefik.http.routers.server.entrypoints=websecure"
+      - "traefik.http.routers.server.tls.certresolver=letsencrypt"
     
-  uicompanion-client:
-    container_name: uicompanion-client
+  uicompanion-app:
+    container_name: uicompanion-app
     depends_on: 
       - uicompanion-server
-    image: ghcr.io/bgeisb/uicompanion:latest
+      - reverse-proxy
+    image: ghcr.io/ls1intum/uicompanion/uicompanion-app:${APP_IMAGE_TAG}
     restart: on-failure
     environment:
       - LOG_LEVEL_IN_STRING=$LOG_LEVEL_IN_STRING
@@ -67,7 +75,7 @@ services:
       - GH_CLIENT_SECRET=$GH_CLIENT_SECRET
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.client.rule=Host(`${SERVER_HOST}`)"
-      - "traefik.http.services.server.loadbalancer.server.port=3000"
-      - "traefik.http.routers.client.entrypoints=websecure"
-      - "traefik.http.routers.client.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.app.rule=Host(`${HOST_ALIAS}`)"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls.certresolver=letsencrypt"

@@ -9,7 +9,7 @@ on:
       server_image_tag:
         default: "latest"
         type: string
-      client_image_tag:
+      app_image_tag:
         default: "latest"
         type: string
 
@@ -22,7 +22,7 @@ jobs:
         run: echo "The computed server tag is ${{ inputs.server_image_tag }}"
 
       - name: Use Computed Client Tag
-        run: echo "The computed client tag is ${{ inputs.client_image_tag }}"
+        run: echo "The computed client tag is ${{ inputs.app_image_tag }}"
 
       - name: SSH to VM and Execute Docker-Compose Down
         uses: appleboy/ssh-action@v0.1.10
@@ -110,8 +110,10 @@ jobs:
             echo "GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> .env.prod
             echo "GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> .env.prod
 
+            echo "HOST_ALIAS=${{ vars.HOST_ALIAS }}" >> .env.prod
+
             echo "SERVER_IMAGE_TAG=${{ inputs.server_image_tag }}" >> .env.prod
-            echo "CLIENT_IMAGE_TAG=${{ inputs.client_image_tag }}" >> .env.prod
+            echo "APP_IMAGE_TAG=${{ inputs.app_image_tag }}" >> .env.prod
 
       - name: SSH to VM and Execute Docker-Compose Up
         uses: appleboy/ssh-action@v0.1.10
