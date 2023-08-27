@@ -26,8 +26,8 @@ services:
       - MONGODB_HOST=$MONGODB_HOST
       - MONGODB_PORT=$MONGODB_PORT
     
-  uicompanion-client:
-    container_name: uicompanion-client
+  uicompanion-app:
+    container_name: uicompanion-app
     depends_on: 
       - uicompanion-server
     build: ./packages/app
