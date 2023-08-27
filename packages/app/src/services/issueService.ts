@@ -36,6 +36,6 @@ export async function persistIssue(
     await probotContext.octokit.issues.createComment(issueComment);
     })
     .catch((error) => {
-        app.log.debug("POST /api/issues error: ", error.response.status);
+        app.log.debug("POST /api/issues error: ", error);
     });
 } 
