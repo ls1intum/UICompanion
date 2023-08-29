@@ -10,8 +10,14 @@ export = (app: Probot) => {
     if (labels?.includes('UI')) {
       app.log.debug('Creating a comment on issue')
 
+      const issueComment = context.issue({
+        body: "Thanks for opening this issue!",
+      });
+
+      await context.octokit.issues.createComment(issueComment);
+
       // Persist issue on application server
-      persistIssue(app, issue, context);
+      persistIssue(app, issue);
 
     } else {
       console.log('No comment created')
