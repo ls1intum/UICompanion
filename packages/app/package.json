@@ -2,7 +2,7 @@
   "name": "UICompanion",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
     "start": "probot run ./lib/index.js",
     "test": "jest"
   },

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Context, Probot } from 'probot';
+import { Probot } from 'probot';
 import { Issue as GitHubIssue } from "@octokit/webhooks-types"
 import { IssueStatus } from '../models/IssueStatus';
 import { Issue } from '../models/Issue';
@@ -7,8 +7,7 @@ import { Issue } from '../models/Issue';
 
 export async function persistIssue(
     app: Probot,
-    issue: GitHubIssue, 
-    probotContext: Context
+    issue: GitHubIssue
 ): Promise<void> {
   let data: Issue = {
     title: issue.title,
@@ -29,13 +28,8 @@ export async function persistIssue(
   .then(async (response) => {
     app.log.debug("POST /api/issues status code: ", response.data);
 
-    const issueComment = probotContext.issue({
-        body: "Thanks for opening this issue!",
-    });
-
-    await probotContext.octokit.issues.createComment(issueComment);
     })
     .catch((error) => {
-        app.log.debug("POST /api/issues error: ", error.response.status);
+        app.log.debug("POST /api/issues error: ", error);
     });
 } 

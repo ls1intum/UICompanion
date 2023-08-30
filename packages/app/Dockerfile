@@ -2,11 +2,10 @@ FROM node:18
 
 WORKDIR /usr/src/app
 
-COPY package.json package-lock.json ./
+COPY . ./
 
 RUN npm i
-
-ENV NODE_ENV="production"
+RUN npm run build
 
 COPY . .
 
