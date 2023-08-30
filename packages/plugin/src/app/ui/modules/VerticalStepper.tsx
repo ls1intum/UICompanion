@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import { Button, Type } from 'react-figma-ui';
 import { StepConnector, stepConnectorClasses, styled } from '@mui/material';
 import { issueStatusToIndex } from '../../models/IssueStatus';
+import { Issue } from '../../models/Issue';
 
 const steps = [
     {
@@ -54,9 +55,18 @@ const CustomConnector = styled(StepConnector)(() => ({
     },
 }));
 
+interface VerticalStepperProps {
+    currentIssue: Issue;
+}
 
-export const VerticalStepper = ({ currentIssue }) => {
+export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
     const [activeStep, setActiveStep] = React.useState(issueStatusToIndex[currentIssue.status]);
+
+    const handleCreate = () => {
+        parent.postMessage({ pluginMessage: { type: 'create-frame', currentIssue } }, '*');
+        
+        handleNext();
+    }
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -78,7 +88,7 @@ export const VerticalStepper = ({ currentIssue }) => {
                     }}>
                         <Button
                             tint='primary'
-                            onClick={handleNext}
+                            onClick={handleCreate}
                         >
                             Generate Frame
                         </Button>
@@ -135,7 +145,7 @@ export const VerticalStepper = ({ currentIssue }) => {
         <Box sx={{ maxWidth: 400 }}>
             <Stepper activeStep={activeStep} connector={<CustomConnector />} orientation="vertical">
                 {steps.map((step, index) => (
-                    <Step key={step.laççbel}>
+                    <Step key={step.label}>
                         <StepLabel
                             optional={
                                 <Type>{step.description}</Type>
