@@ -12,3 +12,12 @@ export async function getIssues(): Promise<Issue[]> {
     throw new Error(error);
   }
 } 
+
+export async function updateIssue(issue: Issue): Promise<Issue> {
+  try {
+    const response = await axios.patch(`http://localhost:3001/api/issues/${issue.number}`, issue);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}

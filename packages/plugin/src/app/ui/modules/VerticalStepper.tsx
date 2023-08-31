@@ -63,7 +63,7 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
     const [activeStep, setActiveStep] = React.useState(issueStatusToIndex[currentIssue.status]);
 
     const handleCreate = () => {
-        parent.postMessage({ pluginMessage: { type: 'create-frame', currentIssue } }, '*');
+        parent.postMessage({ pluginMessage: { type: 'create-frame', currentIssue } }, '*');  
         
         handleNext();
     }

@@ -1,20 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Type } from 'react-figma-ui';
 import { useNavigate, useParams } from 'react-router';
 import { Issue } from '../../models/Issue';
 import { VerticalStepper } from '../modules/VerticalStepper';
+import { updateIssue } from '../../services/issueService';
+import { IssueStatus } from '../../models/IssueStatus';
 
-const IssueDetailPage = ({ issues }) => {
+interface IssueDetailPageProps {
+  issues: Issue[];
+  updateIssuesState: (newIssues: Issue[]) => void;
+}
+
+const IssueDetailPage = (props: IssueDetailPageProps) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const currentIssueIndex = issues.findIndex((issue: Issue) => issue.number.toString() === params.number);
-  const currentIssue = currentIssueIndex !== -1 ? issues[currentIssueIndex] : undefined;
+  const currentIssueIndex = props.issues.findIndex((issue: Issue) => issue.number.toString() === params.number);
+  var currentIssue: Issue = currentIssueIndex !== -1 ? props.issues[currentIssueIndex] : undefined;
 
   const backButtonHandler = (e) => {
     e.preventDefault();
     navigate("/overview");
   };
+
+  useEffect(() => {
+    window.onmessage = async (e) => {
+      console.log("UI LOG", e.data.pluginMessage)
+
+      const updatedIssue: Issue = {
+        ...currentIssue,
+        status: IssueStatus.IN_PROGRESS,
+        frames: [
+          ...currentIssue.frames as string[],
+          e.data.pluginMessage.message,
+        ],
+      }
+      props.issues[currentIssueIndex] = await updateIssue(updatedIssue);
+      props.updateIssuesState(props.issues)
+    };
+  }, []);
 
   return (
     <div style={{

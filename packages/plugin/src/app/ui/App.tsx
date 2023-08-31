@@ -24,11 +24,15 @@ function App() {
     });
   }, []);
 
+  const updateIssuesState = (newIssues: Issue[]) => {
+    setIssues(newIssues);
+  }
+
   return (
     <MemoryRouter initialEntries={["/overview"]}>
       <Routes>
-          <Route path="/overview" element={<IssueOverviewPage issues={issues} />} />
-          <Route path="/detail/:number" element={<IssueDetailPage issues={issues} />} /> 
+        <Route path="/overview" element={<IssueOverviewPage issues={issues} />} />
+        <Route path="/detail/:number" element={<IssueDetailPage issues={issues} updateIssuesState={updateIssuesState} />} /> 
       </Routes>
     </MemoryRouter>
   );

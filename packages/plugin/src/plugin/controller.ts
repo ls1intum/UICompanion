@@ -16,9 +16,9 @@ figma.ui.onmessage = (msg) => {
     // This is how figma responds back to the ui
     figma.ui.postMessage({
       type: 'create-frame',
-      message: `Created Frame`,
+      message: frame.id,
     });
   }
 
-  figma.closePlugin();
+  // figma.closePlugin();
 };
