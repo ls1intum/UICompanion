@@ -8,7 +8,7 @@ const IssueDetailPage = ({ issues }) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const currentIssueIndex = issues.findIndex((issue: Issue) => issue.id.toString() === params.id);
+  const currentIssueIndex = issues.findIndex((issue: Issue) => issue.number.toString() === params.number);
   const currentIssue = currentIssueIndex !== -1 ? issues[currentIssueIndex] : undefined;
 
   const backButtonHandler = (e) => {
@@ -48,7 +48,7 @@ const IssueDetailPage = ({ issues }) => {
             letterSpacing: '0.14px',
             lineHeight: '20px',
           }}>
-          {"#" + currentIssue.id}
+          {"#" + currentIssue.number}
           </Type>
 
           {/* --- TITLE --- */}

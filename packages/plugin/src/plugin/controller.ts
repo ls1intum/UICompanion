@@ -6,7 +6,7 @@ figma.ui.onmessage = (msg) => {
 
     const frame = figma.createFrame();
     frame.resize(1440, 1024)
-    frame.name = `#${msg.currentIssue.id} ${msg.currentIssue.title}`;
+    frame.name = `#${msg.currentIssue.number} ${msg.currentIssue.title}`;
     figma.currentPage.appendChild(frame);
     nodes.push(frame);
 

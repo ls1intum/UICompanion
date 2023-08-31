@@ -24,7 +24,7 @@ const IssueOverviewPage = ({ issues }) => {
                 {issues
                     .filter((issue: Issue) => { return issue.status === IssueStatus.OPEN })
                     .map((issue: Issue, index: number) => (
-                        <div key={issue.id}>
+                        <div key={issue.number}>
                             <IssueListItem
                                 issue={issue}
                             />
@@ -45,7 +45,7 @@ const IssueOverviewPage = ({ issues }) => {
                 {issues
                     .filter((issue: Issue) => { return issue.status === IssueStatus.IN_PROGRESS })
                     .map((issue: Issue, index: number) => (
-                        <div key={issue.id}>
+                        <div key={issue.number}>
                             <IssueListItem
                                 issue={issue}
                             />

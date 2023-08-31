@@ -28,7 +28,7 @@ function App() {
     <MemoryRouter initialEntries={["/overview"]}>
       <Routes>
           <Route path="/overview" element={<IssueOverviewPage issues={issues} />} />
-          <Route path="/detail/:id" element={<IssueDetailPage issues={issues} />} /> 
+          <Route path="/detail/:number" element={<IssueDetailPage issues={issues} />} /> 
       </Routes>
     </MemoryRouter>
   );

@@ -9,7 +9,7 @@ type IssueListItemProps = {
 
 const IssueListItem = (props: IssueListItemProps) => {
   return (
-    <Link to={`/detail/${props.issue.id}`} style={{
+    <Link to={`/detail/${props.issue.number}`} style={{
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
@@ -23,9 +23,9 @@ const IssueListItem = (props: IssueListItemProps) => {
       textDecoration: 'none',
     }}>
 
-      {/* Issue ID */}
+      {/* Issue Number */}
       <Type size="small" weight="medium" style={{ color: '#B2B2B2' }}>
-        {`#${props.issue.id}`}
+        {`#${props.issue.number}`}
       </Type>
 
       {/* Issue Title */}
