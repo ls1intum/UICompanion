@@ -3,17 +3,12 @@ import { Issue } from '../models/Issue';
 
 
 export async function getIssues(): Promise<Issue[]> {
-  const issues: Issue[] = [];
+  // const url = 'https://corsproxy.io/?' + encodeURIComponent('https://uicompanion.ase.cit.tum.de/api/issues');
   
-  axios.get(
-    'http://localhost:3001/api/issues',
-  )
-  .then(async (response) => {
-    issues.push(...response.data);
-  })
-  .catch((error) => {
+  try {
+    const response = await axios.get('http://localhost:3001/api/issues');
+    return response.data.issues;
+  } catch (error) {
     throw new Error(error);
-  });
-
-  return issues;
+  }
 } 
