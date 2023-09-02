@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Button, Type } from 'react-figma-ui';
 import { useNavigate, useParams } from 'react-router';
 import { Issue } from '../../models/Issue';
 import { VerticalStepper } from '../modules/VerticalStepper';
-import { updateIssue } from '../../services/issueService';
 import { IssueStatus } from '../../models/IssueStatus';
 
 interface IssueDetailPageProps {
@@ -15,30 +14,40 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const currentIssueIndex = props.issues.findIndex((issue: Issue) => issue.number.toString() === params.number);
-  var currentIssue: Issue = currentIssueIndex !== -1 ? props.issues[currentIssueIndex] : undefined;
+  const findIssueByNumber = (number: string) => props.issues.find((issue: Issue) => issue.number.toString() === number);
 
-  const backButtonHandler = (e) => {
+  const currentIssue = useMemo(() => findIssueByNumber(params.number), [props.issues, params.number]);
+
+  const backButtonHandler = React.useCallback((e) => {
     e.preventDefault();
     navigate("/overview");
-  };
+  }, [navigate]);
+
 
   useEffect(() => {
-    window.onmessage = async (e) => {
-      console.log("UI LOG", e.data.pluginMessage)
+    const handleMessage = async (e) => {
+      console.log("UI LOG", e.data.pluginMessage);
 
       const updatedIssue: Issue = {
         ...currentIssue,
         status: IssueStatus.IN_PROGRESS,
-        frames: [
-          ...currentIssue.frames as string[],
-          e.data.pluginMessage.message,
-        ],
-      }
-      props.issues[currentIssueIndex] = await updateIssue(updatedIssue);
-      props.updateIssuesState(props.issues)
+        frames: [...currentIssue.frames as string[], e.data.pluginMessage.message],
+      };
+
+      const updatedIssues = props.issues.map((issue) =>
+        issue.number.toString() === params.number ? updatedIssue : issue
+      );
+
+      props.updateIssuesState(updatedIssues);
     };
-  }, []);
+
+    window.onmessage = handleMessage;
+
+    return () => {
+      // Cleanup when unmounting
+      window.onmessage = null;
+    };
+  }, [currentIssue, params.number, props]);
 
   return (
     <div style={{

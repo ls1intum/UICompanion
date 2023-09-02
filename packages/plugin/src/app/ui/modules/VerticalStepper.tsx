@@ -6,9 +6,10 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
 import { Button, Type } from 'react-figma-ui';
-import { StepConnector, stepConnectorClasses, styled } from '@mui/material';
+import { Stack, StepConnector, stepConnectorClasses, styled } from '@mui/material';
 import { issueStatusToIndex } from '../../models/IssueStatus';
 import { Issue } from '../../models/Issue';
+import { Chip, ChipDelete } from '@mui/joy';
 
 const steps = [
     {
@@ -141,6 +142,31 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
         }
     }, [status]);
 
+    function AvailableFrames(props) {
+        const index = props.index;
+
+        if (index === 1) {
+            return (
+                <Stack
+                    direction="row"
+                    spacing={1}
+                >
+                    {currentIssue.frames
+                        .map((frame: string) => (
+                            <Chip
+                                key={frame}
+                                endDecorator={<ChipDelete />}
+                                size="sm"
+                            >
+                                {frame}
+                            </Chip>
+                        ))
+                    }
+                </Stack>
+            )
+        }
+    }
+
     return (
         <Box sx={{ maxWidth: 400 }}>
             <Stepper activeStep={activeStep} connector={<CustomConnector />} orientation="vertical">
@@ -163,9 +189,14 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
                             </Type>
                         </StepLabel>
                         <StepContent sx={{ borderColor: '#F0F0F0' }}>
-                            <Box>
-                                {renderActionButtons(index)}
-                            </Box>
+                            <Stack spacing={2}>
+                                
+                                <AvailableFrames index={index} />
+                                
+                                <Box>
+                                    {renderActionButtons(index)}
+                                </Box>
+                            </Stack>
                         </StepContent>
                     </Step>
                 ))}
