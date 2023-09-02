@@ -1,6 +1,7 @@
 import { Document, Schema, Model, model, Error } from 'mongoose'
 
 export interface IIssue extends Document {
+    number: number;
     title: string;
     description: string;
     status: string;
@@ -8,6 +9,11 @@ export interface IIssue extends Document {
 }
 
 const issueSchema = new Schema({
+    number: {
+        type: Number,
+        required: true,
+        unique: true,
+    },
     title: {
         type: String,
         required: true,

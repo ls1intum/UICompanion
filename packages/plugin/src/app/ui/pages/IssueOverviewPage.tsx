@@ -2,6 +2,7 @@ import React from 'react';
 import { Chip } from '../components/Chip';
 import IssueListItem from '../modules/IssueListItem';
 import { IssueStatus } from '../../models/IssueStatus';
+import { Issue } from '../../models/Issue';
 
 const IssueOverviewPage = ({ issues }) => {
 
@@ -21,9 +22,9 @@ const IssueOverviewPage = ({ issues }) => {
                 padding: '10px 0 25px 0',
             }}>
                 {issues
-                    .filter((issue) => { return issue.status === IssueStatus.OPEN })
-                    .map((issue, index) => (
-                        <div key={issue.title}>
+                    .filter((issue: Issue) => { return issue.status === IssueStatus.OPEN })
+                    .map((issue: Issue, index: number) => (
+                        <div key={issue.number}>
                             <IssueListItem
                                 issue={issue}
                             />
@@ -42,9 +43,9 @@ const IssueOverviewPage = ({ issues }) => {
                 padding: '10px 0 25px 0',
             }}>
                 {issues
-                    .filter((issue) => { return issue.status === IssueStatus.IN_PROGRESS })
-                    .map((issue, index) => (
-                        <div key={issue.title}>
+                    .filter((issue: Issue) => { return issue.status === IssueStatus.IN_PROGRESS })
+                    .map((issue: Issue, index: number) => (
+                        <div key={issue.number}>
                             <IssueListItem
                                 issue={issue}
                             />

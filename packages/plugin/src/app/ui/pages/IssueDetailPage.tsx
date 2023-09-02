@@ -1,20 +1,53 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Button, Type } from 'react-figma-ui';
 import { useNavigate, useParams } from 'react-router';
 import { Issue } from '../../models/Issue';
 import { VerticalStepper } from '../modules/VerticalStepper';
+import { IssueStatus } from '../../models/IssueStatus';
 
-const IssueDetailPage = ({ issues }) => {
+interface IssueDetailPageProps {
+  issues: Issue[];
+  updateIssuesState: (newIssues: Issue[]) => void;
+}
+
+const IssueDetailPage = (props: IssueDetailPageProps) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const currentIssueIndex = issues.findIndex((issue: Issue) => issue.id.toString() === params.id);
-  const currentIssue = currentIssueIndex !== -1 ? issues[currentIssueIndex] : undefined;
+  const findIssueByNumber = (number: string) => props.issues.find((issue: Issue) => issue.number.toString() === number);
 
-  const backButtonHandler = (e) => {
+  const currentIssue = useMemo(() => findIssueByNumber(params.number), [props.issues, params.number]);
+
+  const backButtonHandler = React.useCallback((e) => {
     e.preventDefault();
     navigate("/overview");
-  };
+  }, [navigate]);
+
+
+  useEffect(() => {
+    const handleMessage = async (e) => {
+      console.log("UI LOG", e.data.pluginMessage);
+
+      const updatedIssue: Issue = {
+        ...currentIssue,
+        status: IssueStatus.IN_PROGRESS,
+        frames: [...currentIssue.frames as string[], e.data.pluginMessage.message],
+      };
+
+      const updatedIssues = props.issues.map((issue) =>
+        issue.number.toString() === params.number ? updatedIssue : issue
+      );
+
+      props.updateIssuesState(updatedIssues);
+    };
+
+    window.onmessage = handleMessage;
+
+    return () => {
+      // Cleanup when unmounting
+      window.onmessage = null;
+    };
+  }, [currentIssue, params.number, props]);
 
   return (
     <div style={{
@@ -48,7 +81,7 @@ const IssueDetailPage = ({ issues }) => {
             letterSpacing: '0.14px',
             lineHeight: '20px',
           }}>
-          {"#" + currentIssue.id}
+          {"#" + currentIssue.number}
           </Type>
 
           {/* --- TITLE --- */}

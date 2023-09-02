@@ -5,8 +5,8 @@ figma.ui.onmessage = (msg) => {
     const nodes = [];
 
     const frame = figma.createFrame();
-    frame.x = 150;
-    frame.name = `#${msg.issueId} Mockup`;
+    frame.resize(1440, 1024)
+    frame.name = `#${msg.currentIssue.number} ${msg.currentIssue.title}`;
     figma.currentPage.appendChild(frame);
     nodes.push(frame);
 
@@ -16,9 +16,9 @@ figma.ui.onmessage = (msg) => {
     // This is how figma responds back to the ui
     figma.ui.postMessage({
       type: 'create-frame',
-      message: `Created Frame`,
+      message: frame.id,
     });
   }
 
-  figma.closePlugin();
+  // figma.closePlugin();
 };

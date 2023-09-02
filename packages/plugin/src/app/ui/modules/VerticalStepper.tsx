@@ -6,8 +6,10 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
 import { Button, Type } from 'react-figma-ui';
-import { StepConnector, stepConnectorClasses, styled } from '@mui/material';
+import { Stack, StepConnector, stepConnectorClasses, styled } from '@mui/material';
 import { issueStatusToIndex } from '../../models/IssueStatus';
+import { Issue } from '../../models/Issue';
+import { Chip, ChipDelete } from '@mui/joy';
 
 const steps = [
     {
@@ -54,9 +56,18 @@ const CustomConnector = styled(StepConnector)(() => ({
     },
 }));
 
+interface VerticalStepperProps {
+    currentIssue: Issue;
+}
 
-export const VerticalStepper = ({ currentIssue }) => {
+export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
     const [activeStep, setActiveStep] = React.useState(issueStatusToIndex[currentIssue.status]);
+
+    const handleCreate = () => {
+        parent.postMessage({ pluginMessage: { type: 'create-frame', currentIssue } }, '*');  
+        
+        handleNext();
+    }
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -78,7 +89,7 @@ export const VerticalStepper = ({ currentIssue }) => {
                     }}>
                         <Button
                             tint='primary'
-                            onClick={handleNext}
+                            onClick={handleCreate}
                         >
                             Generate Frame
                         </Button>
@@ -131,11 +142,36 @@ export const VerticalStepper = ({ currentIssue }) => {
         }
     }, [status]);
 
+    function AvailableFrames(props) {
+        const index = props.index;
+
+        if (index === 1) {
+            return (
+                <Stack
+                    direction="row"
+                    spacing={1}
+                >
+                    {currentIssue.frames
+                        .map((frame: string) => (
+                            <Chip
+                                key={frame}
+                                endDecorator={<ChipDelete />}
+                                size="sm"
+                            >
+                                {frame}
+                            </Chip>
+                        ))
+                    }
+                </Stack>
+            )
+        }
+    }
+
     return (
         <Box sx={{ maxWidth: 400 }}>
             <Stepper activeStep={activeStep} connector={<CustomConnector />} orientation="vertical">
                 {steps.map((step, index) => (
-                    <Step key={step.laççbel}>
+                    <Step key={step.label}>
                         <StepLabel
                             optional={
                                 <Type>{step.description}</Type>
@@ -153,9 +189,14 @@ export const VerticalStepper = ({ currentIssue }) => {
                             </Type>
                         </StepLabel>
                         <StepContent sx={{ borderColor: '#F0F0F0' }}>
-                            <Box>
-                                {renderActionButtons(index)}
-                            </Box>
+                            <Stack spacing={2}>
+                                
+                                <AvailableFrames index={index} />
+                                
+                                <Box>
+                                    {renderActionButtons(index)}
+                                </Box>
+                            </Stack>
                         </StepContent>
                     </Step>
                 ))}
