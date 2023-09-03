@@ -20,7 +20,7 @@ export = (app: Probot) => {
       persistIssue(app, issue);
 
     } else {
-      console.log('No comment created')
+      app.log.error('No comment created')
     }
     
   });
