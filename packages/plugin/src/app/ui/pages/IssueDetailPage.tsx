@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router';
 import { Issue } from '../../models/Issue';
 import { VerticalStepper } from '../modules/VerticalStepper';
 import { IssueStatus } from '../../models/IssueStatus';
+import { updateIssue } from '../../services/issueService';
+import { postPrototype } from '../../services/prototypeService';
 
 interface IssueDetailPageProps {
   issues: Issue[];
@@ -26,19 +28,44 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
 
   useEffect(() => {
     const handleMessage = async (e) => {
-      console.log("UI LOG", e.data.pluginMessage);
+      const pluginMessage = e.data.pluginMessage;
 
-      const updatedIssue: Issue = {
-        ...currentIssue,
-        status: IssueStatus.IN_PROGRESS,
-        frames: [...currentIssue.frames as string[], e.data.pluginMessage.message],
-      };
+      console.log(`Received message from figma: ${pluginMessage.type}`);
 
-      const updatedIssues = props.issues.map((issue) =>
-        issue.number.toString() === params.number ? updatedIssue : issue
-      );
+      switch (pluginMessage.type) {
+        case 'create-frame': {
+          // Persist the created frame in the current issue
+          const updatedIssue: Issue = {
+            ...currentIssue,
+            status: IssueStatus.IN_PROGRESS,
+            frames: [...currentIssue.frames as string[], e.data.pluginMessage.message],
+          };
 
-      props.updateIssuesState(updatedIssues);
+          const updatedIssues = props.issues.map((issue) =>
+            issue.number.toString() === params.number ? updatedIssue : issue
+          );
+
+          props.updateIssuesState(updatedIssues);
+          await updateIssue(updatedIssue);
+          break;
+        }
+        case 'export-prototype': {
+          const exportedBytes: Uint8Array[] = e.data.pluginMessage.message;
+          const prototypeURLs: string[] = [];
+
+          exportedBytes.forEach(async (bytes) => {
+            const response = await postPrototype(bytes);
+            prototypeURLs.push(response.url);
+          });
+
+          console.log("Prototype URLs: ", prototypeURLs);
+          
+          break;
+        }
+        default: {
+          console.log(`Unknown message type: ${pluginMessage.type}`);
+        }
+      }
     };
 
     window.onmessage = handleMessage;

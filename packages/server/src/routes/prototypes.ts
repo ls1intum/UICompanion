@@ -38,7 +38,7 @@ router.get("/api/prototypes/:filename", async (req, res) => {
         const database = mongoClient.db("prototypes")
 
         const imageBucket = new GridFSBucket(database, {
-            bucketName: "prototypes",
+            bucketName: "fs",
         })
 
         let downloadStream = imageBucket.openDownloadStreamByName(

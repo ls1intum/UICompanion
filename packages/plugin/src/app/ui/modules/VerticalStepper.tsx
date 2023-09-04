@@ -69,6 +69,12 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
         handleNext();
     }
 
+    const handleSubmit = () => {
+        parent.postMessage({ pluginMessage: { type: 'export-prototype', currentIssue } }, '*');
+
+        handleNext();
+    }
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -129,7 +135,7 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
                     }}>
                         <Button
                             tint='primary'
-                            onClick={handleNext}
+                            onClick={handleSubmit}
                         >
                             Submit Mockup
                         </Button>
