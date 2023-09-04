@@ -32,7 +32,7 @@ export async function persistIssue(
     app.log.debug("POST /api/issues status code: ", response.data);
 
     })
-    .catch((error) => {
-        app.log.debug("POST /api/issues error: ", error);
-    });
+  .catch((error) => {
+      app.log.debug("POST /api/issues error: ", error);
+  });
 } 

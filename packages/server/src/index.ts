@@ -5,12 +5,14 @@ import mongoose, { ConnectOptions } from 'mongoose';
 
 // Routes
 import { issuesRouter } from './routes/issues';
+import { prototypesRouter } from './routes/prototypes';
 
 
 const app = express();
 app.use(json());
 app.use(cors());
 app.use(issuesRouter);
+app.use(prototypesRouter);
 
 const mongoURI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/issues?authSource=admin`
 mongoose.connect(mongoURI, {
