@@ -11,7 +11,7 @@ export = (app: Probot) => {
       app.log.debug('Creating a comment on issue')
 
       const issueComment = context.issue({
-        body: "Thanks for opening this issue!",
+        body: "## 🎨 UI Design Required \n\nIt appears that this issue demands some attention to the user interface. To get started, please create a Figma prototype and seek approval from the designated Artemis maintainer.\n\nI'm here to guide you through this process. Simply follow this [Figma Project Link](https://www.figma.com/file/ruz3GxQhxe59shmahjDR0J/Prototype?type=design&node-id=258%3A52&mode=design&t=Cbc4IBgDeGGSKMwJ-1) to access our Figma project. There, you'll receive step-by-step guidance using the UICompanion Figma app."
       });
 
       await context.octokit.issues.createComment(issueComment);

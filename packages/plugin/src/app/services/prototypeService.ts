@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as FormData from "form-data";
 
 
-export async function postPrototype(bytes: Uint8Array): Promise<string>{
+export async function postPrototype(bytes: Uint8Array){
     try {
         const blob = new Blob([bytes], { type: 'application/octet-stream' });
 
