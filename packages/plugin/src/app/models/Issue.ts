@@ -4,4 +4,5 @@ export interface Issue {
     description: string;
     status: string;
     frames: string[];
+    prototypeUrls: string[];
 }

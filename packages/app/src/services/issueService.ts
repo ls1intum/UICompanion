@@ -14,7 +14,8 @@ export async function persistIssue(
     title: issue.title,
     description: issue.body || '',
     status: IssueStatus.OPEN,
-    frames: []
+    frames: [],
+    prototypeUrls: [],
   };
 
   app.log.debug("POST Data: ", data);

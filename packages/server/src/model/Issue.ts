@@ -6,6 +6,7 @@ export interface IIssue extends Document {
     description: string;
     status: string;
     frames: string[];
+    prototypeUrls: string[];
 }
 
 const issueSchema = new Schema({
@@ -28,6 +29,10 @@ const issueSchema = new Schema({
         enum: ['Open', 'In Progress', 'In Review', 'Approved'],
     },
     frames: {
+        type: [String],
+        required: true,
+    },
+    prototypeUrls: {
         type: [String],
         required: true,
     },
