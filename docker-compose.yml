@@ -25,6 +25,7 @@ services:
       - MONGODB_DATABASE=$MONGODB_DATABASE
       - MONGODB_HOST=$MONGODB_HOST
       - MONGODB_PORT=$MONGODB_PORT
+      - SERVER_BASE_URL=$SERVER_BASE_URL
     
   uicompanion-app:
     container_name: uicompanion-app

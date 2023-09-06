@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as FormData from "form-data";
 
+const baseUrl = process.env.NODE_ENV == 'production' ? 'https://uicompanion.ase.cit.tum.de' : 'http://localhost:3001';
 
 export async function postPrototype(bytes: Uint8Array){
     try {
@@ -13,7 +14,7 @@ export async function postPrototype(bytes: Uint8Array){
         let config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: 'http://localhost:3001/api/prototypes',
+            url: `${baseUrl}/api/prototypes`,
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

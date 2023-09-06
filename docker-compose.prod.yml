@@ -50,6 +50,7 @@ services:
       - MONGODB_DATABASE=$MONGODB_DATABASE
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+      - SERVER_BASE_URL=$SERVER_BASE_URL
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server.rule=Host(`${HOST_ALIAS}`) && PathPrefix(`/api`)"
