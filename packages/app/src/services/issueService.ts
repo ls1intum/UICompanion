@@ -10,6 +10,7 @@ export async function persistIssue(
     issue: GitHubIssue
 ): Promise<void> {
   let data: Issue = {
+    respotory_url: issue.repository_url,
     number: issue.number,
     title: issue.title,
     description: issue.body || '',
@@ -17,8 +18,6 @@ export async function persistIssue(
     frames: [],
     prototypeUrls: [],
   };
-
-  app.log.debug("POST Data: ", data);
 
   axios.post(
     'http://uicompanion-server:3001/api/issues',

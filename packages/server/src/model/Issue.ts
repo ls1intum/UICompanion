@@ -1,6 +1,7 @@
 import { Document, Schema, Model, model, Error } from 'mongoose'
 
 export interface IIssue extends Document {
+    respotory_url: string;
     number: number;
     title: string;
     description: string;
@@ -10,6 +11,10 @@ export interface IIssue extends Document {
 }
 
 const issueSchema = new Schema({
+    respotory_url: {
+        type: String,
+        required: true,
+    },
     number: {
         type: Number,
         required: true,

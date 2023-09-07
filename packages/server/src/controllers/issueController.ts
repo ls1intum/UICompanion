@@ -13,6 +13,8 @@ export class IssueController {
     public async createIssue(req: Request, res: Response): Promise<void> {
         const newIssue: IIssue = new Issue(req.body);
 
+        console.log("New issue:", newIssue);
+
         const createdIssue = await newIssue.save();
         if (!createdIssue) {
             console.log("Issue could not be saved");

@@ -1,4 +1,5 @@
 export interface Issue {
+    respotory_url: string;
     number: number;
     title: string;
     description: string;
