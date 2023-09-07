@@ -1,8 +1,24 @@
 import { Probot } from "probot";
 import { Issue } from "@octokit/webhooks-types"
 import { persistIssue } from "./services/issueService";
+import { Request, Response } from "express";
 
-export = (app: Probot) => {
+module.exports = (app: Probot, { getRouter }: any) => {
+  // Get an express router to expose new HTTP endpoints
+  const router = getRouter("/message");
+
+  // Use any middleware
+  router.use(require("express").static("public"));
+
+  // Add a new route
+  router.post("/prototype", (req: Request, res: Response) => {
+    console.log("Received prototype URLs", req.body);
+
+    res.status(200).json({
+      message: "Prototype URLs received successfully"
+    });
+  });
+
   app.on("issues.opened", async (context) => {
     const issue: Issue = context.payload.issue;
     const labels: String[] | undefined = issue.labels?.map((label) => label.name);
@@ -22,6 +38,6 @@ export = (app: Probot) => {
     } else {
       app.log.error('No comment created')
     }
-    
+
   });
-};
+}; 
