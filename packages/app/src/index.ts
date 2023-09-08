@@ -1,23 +1,20 @@
 import { Probot } from "probot";
 import { Issue } from "@octokit/webhooks-types"
 import { persistIssue } from "./services/issueService";
-import { Request, Response } from "express";
+import { MessageController } from "./controllers/messageController";
+import { json } from "express";
 
 module.exports = (app: Probot, { getRouter }: any) => {
   // Get an express router to expose new HTTP endpoints
   const router = getRouter("/message");
+  const messageController = new MessageController();
 
   // Use any middleware
+  router.use(json());
   router.use(require("express").static("public"));
 
   // Add a new route
-  router.post("/prototype", (req: Request, res: Response) => {
-    console.log("Received prototype URLs", req.body);
-
-    res.status(200).json({
-      message: "Prototype URLs received successfully"
-    });
-  });
+  router.post("/prototype", messageController.handlePrototypeMessage);
 
   app.on("issues.opened", async (context) => {
     const issue: Issue = context.payload.issue;

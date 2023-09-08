@@ -1,5 +1,5 @@
 export interface Issue {
-    respotory_url: string;
+    repository_url: string;
     number: number;
     title: string;
     description: string;

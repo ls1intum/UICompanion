@@ -6,6 +6,7 @@ import { VerticalStepper } from '../modules/VerticalStepper';
 import { IssueStatus } from '../../models/IssueStatus';
 import { updateIssue } from '../../services/issueService';
 import { postPrototype } from '../../services/prototypeService';
+import { confirmPrototypes } from '../../services/messageService';
 
 interface IssueDetailPageProps {
   issues: Issue[];
@@ -59,6 +60,17 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
           });
 
           console.log("Prototype URLs: ", prototypeURLs);
+
+          // Persist the prototype urls in the current issue
+          const updatedIssue: Issue = {
+            ...currentIssue,
+            prototypeUrls: [...currentIssue.prototypeUrls as string[], ...prototypeURLs],
+          };
+
+          const persistedIssue = await updateIssue(updatedIssue);
+          
+          // Inform the plugin that the prototypes have been persisted
+          await confirmPrototypes(persistedIssue)
           
           break;
         }

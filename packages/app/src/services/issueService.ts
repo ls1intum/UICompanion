@@ -10,7 +10,7 @@ export async function persistIssue(
     issue: GitHubIssue
 ): Promise<void> {
   let data: Issue = {
-    respotory_url: issue.repository_url,
+    repository_url: issue.repository_url,
     number: issue.number,
     title: issue.title,
     description: issue.body || '',
