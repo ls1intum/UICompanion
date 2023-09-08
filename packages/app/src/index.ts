@@ -3,6 +3,7 @@ import { Issue } from "@octokit/webhooks-types"
 import { persistIssue } from "./services/issueService";
 import { MessageController } from "./controllers/messageController";
 import { json } from "express";
+import cors from "cors";
 
 module.exports = (app: Probot, { getRouter }: any) => {
   // Get an express router to expose new HTTP endpoints
@@ -11,6 +12,7 @@ module.exports = (app: Probot, { getRouter }: any) => {
 
   // Use any middleware
   router.use(json());
+  router.use(cors());
   router.use(require("express").static("public"));
 
   // Add a new route
