@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Issue } from "../models/Issue";
+import { Issue } from "@ls1intum/uicompanion-shared/models/Issue";
 
 export async function commentPrototypesOnGithub(issue: Issue): Promise<void> {
     const url = `${issue.repository_url}/issues/${issue.number}/comments`;

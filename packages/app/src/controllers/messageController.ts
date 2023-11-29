@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Issue } from '../models/Issue';
+import { Issue } from "@ls1intum/uicompanion-shared/models/Issue";
 import { commentPrototypesOnGithub } from '../services/githubService';
 
 export class MessageController {

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { Probot } from 'probot';
 import { Issue as GitHubIssue } from "@octokit/webhooks-types"
-import { IssueStatus } from '../models/IssueStatus';
-import { Issue } from '../models/Issue';
+import { Issue } from "@ls1intum/uicompanion-shared/models/Issue";
+import { IssueStatus } from "@ls1intum/uicompanion-shared/models/IssueStatus";
 
 
 export async function persistIssue(

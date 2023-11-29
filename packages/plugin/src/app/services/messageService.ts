@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Issue } from '../models/Issue';
+import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 
 const baseUrl = process.env.NODE_ENV == 'production' ? 'https://uicompanion.ase.cit.tum.de' : 'https://smee.io/pw84GLld8PTLGAok';
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import IssueOverviewPage from './pages/IssueOverviewPage';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import IssueDetailPage from './pages/IssueDetailPage';
-import { Issue } from '../models/Issue';
+import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 import { getIssues } from '../services/issueService';
 
 function App() {

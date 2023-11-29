@@ -1,8 +1,8 @@
 import React from 'react';
 import { Chip } from '../components/Chip';
 import IssueListItem from '../modules/IssueListItem';
-import { IssueStatus } from '../../models/IssueStatus';
-import { Issue } from '../../models/Issue';
+import { IssueStatus } from '@ls1intum/uicompanion-shared/models/IssueStatus';
+import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 
 const IssueOverviewPage = ({ issues }) => {
 

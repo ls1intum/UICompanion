@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "uicompanion",
   "private": true,
   "workspaces": [
     "packages/*"

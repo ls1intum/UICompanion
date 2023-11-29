@@ -7,8 +7,8 @@ import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
 import { Button, Type } from 'react-figma-ui';
 import { Stack, StepConnector, stepConnectorClasses, styled } from '@mui/material';
-import { issueStatusToIndex } from '../../models/IssueStatus';
-import { Issue } from '../../models/Issue';
+import { issueStatusToIndex } from '@ls1intum/uicompanion-shared/models/IssueStatus';
+import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 import { Chip, ChipDelete } from '@mui/joy';
 
 const steps = [

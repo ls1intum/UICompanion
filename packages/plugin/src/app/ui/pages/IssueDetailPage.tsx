@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import { Button, Type } from 'react-figma-ui';
 import { useNavigate, useParams } from 'react-router';
-import { Issue } from '../../models/Issue';
+import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 import { VerticalStepper } from '../modules/VerticalStepper';
-import { IssueStatus } from '../../models/IssueStatus';
+import { IssueStatus } from '@ls1intum/uicompanion-shared/models/IssueStatus';
 import { updateIssue } from '../../services/issueService';
 import { postPrototype } from '../../services/prototypeService';
 import { confirmPrototypes } from '../../services/messageService';

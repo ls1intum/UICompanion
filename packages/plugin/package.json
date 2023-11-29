@@ -1,8 +1,6 @@
 {
-  "name": "figma-plugin-react-template",
+  "name": "uicompanion-plugin",
   "version": "1.0.0",
-  "description": "This plugin template uses Typescript. If you are familiar with Javascript, Typescript will look very familiar. In fact, valid Javascript code is already valid Typescript code.",
-  "license": "ISC",
   "scripts": {
     "build": "webpack --mode=production",
     "start": "webpack --mode=production --watch",
@@ -12,6 +10,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@ls1intum/uicompanion-shared": "^1.0.0",
     "@mui/joy": "^5.0.0-beta.4",
     "@mui/material": "^5.14.5",
     "axios": "^1.4.0",

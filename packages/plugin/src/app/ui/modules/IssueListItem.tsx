@@ -1,7 +1,7 @@
 import React from 'react';
 import { Type } from 'react-figma-ui';
 import { Link } from 'react-router-dom';
-import { Issue } from '../../models/Issue';
+import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 
 type IssueListItemProps = {
   issue: Issue;
