@@ -1,20 +1,18 @@
 import axios from 'axios';
-import { Probot } from 'probot';
-import { Issue as GitHubIssue } from "@octokit/webhooks-types"
-import { Issue } from "@ls1intum/uicompanion-shared/models/Issue";
-import { IssueStatus } from "@ls1intum/uicompanion-shared/models/IssueStatus";
+import {Probot} from 'probot';
+import {Issue as GitHubIssue} from "@octokit/webhooks-types"
+import IssueMetadata from '@ls1intum/uicompanion-shared/models/IssueMetadata';
+import MockupProgress from "@ls1intum/uicompanion-shared/enums/MockupProgress";
 
 
 export async function persistIssue(
     app: Probot,
     issue: GitHubIssue
 ): Promise<void> {
-  let data: Issue = {
+  let data: IssueMetadata = {
     repository_url: issue.repository_url,
     number: issue.number,
-    title: issue.title,
-    description: issue.body || '',
-    status: IssueStatus.OPEN,
+    progress: MockupProgress.OPEN,
     frames: [],
     prototypeUrls: [],
   };

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Type } from 'react-figma-ui';
 import { Link } from 'react-router-dom';
-import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
+import GithubIssue from "@ls1intum/uicompanion-shared/models/GithubIssue";
 
 type IssueListItemProps = {
-  issue: Issue;
+  issue: GithubIssue;
 };
 
 const IssueListItem = (props: IssueListItemProps) => {

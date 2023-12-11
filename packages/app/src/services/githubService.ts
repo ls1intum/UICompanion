@@ -1,7 +1,8 @@
+import IssueMetadata from "@ls1intum/uicompanion-shared/models/IssueMetadata";
 import axios from "axios";
-import { Issue } from "@ls1intum/uicompanion-shared/models/Issue";
 
-export async function commentPrototypesOnGithub(issue: Issue): Promise<void> {
+
+export async function commentPrototypesOnGithub(issue: IssueMetadata): Promise<void> {
     const url = `${issue.repository_url}/issues/${issue.number}/comments`;
     const comment = issue.prototypeUrls.map(url => `![Bild](${url})`).join('\n');
 

@@ -15,7 +15,10 @@ services:
     container_name: uicompanion-server
     depends_on:
       - mongodb
-    build: ./packages/server
+    build:
+      context: ./packages/server
+      args:
+        - NPM_TOKEN=$NPM_TOKEN
     restart: on-failure
     ports:
       - "3001:3001"
@@ -26,12 +29,16 @@ services:
       - MONGODB_HOST=$MONGODB_HOST
       - MONGODB_PORT=$MONGODB_PORT
       - SERVER_BASE_URL=$SERVER_BASE_URL
+      - NPM_TOKEN=$NPM_TOKEN
     
   uicompanion-app:
     container_name: uicompanion-app
     depends_on: 
       - uicompanion-server
-    build: ./packages/app
+    build:
+      context: ./packages/app
+      args:
+        - NPM_TOKEN=$NPM_TOKEN
     restart: on-failure
     ports:
       - "3000:3000"
@@ -43,3 +50,4 @@ services:
       - WEBHOOK_SECRET=$WEBHOOK_SECRET
       - GH_CLIENT_ID=$GH_CLIENT_ID
       - GH_CLIENT_SECRET=$GH_CLIENT_SECRET
+      - NPM_TOKEN=$NPM_TOKEN

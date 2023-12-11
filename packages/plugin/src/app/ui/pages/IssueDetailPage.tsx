@@ -1,25 +1,31 @@
-import React, { useEffect, useMemo } from 'react';
-import { Button, Type } from 'react-figma-ui';
-import { useNavigate, useParams } from 'react-router';
-import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
-import { VerticalStepper } from '../modules/VerticalStepper';
-import { IssueStatus } from '@ls1intum/uicompanion-shared/models/IssueStatus';
-import { updateIssue } from '../../services/issueService';
-import { postPrototype } from '../../services/prototypeService';
-import { confirmPrototypes } from '../../services/messageService';
+import React, {useEffect, useMemo} from 'react';
+import {Button, Type} from 'react-figma-ui';
+import {useNavigate, useParams} from 'react-router';
+import {VerticalStepper} from '../modules/VerticalStepper';
+import {updateIssueMetadata} from '../../services/@uicompanion-server/issueService';
+import {postPrototype} from '../../services/@uicompanion-server/prototypeService';
+import {confirmPrototypes} from '../../services/@uicompanion-server/messageService';
+import GithubIssue from "@ls1intum/uicompanion-shared/models/GithubIssue";
+import IssueMetadata from "@ls1intum/uicompanion-shared/models/IssueMetadata";
+import MockupProgress from "@ls1intum/uicompanion-shared/enums/MockupProgress";
+
 
 interface IssueDetailPageProps {
-  issues: Issue[];
-  updateIssuesState: (newIssues: Issue[]) => void;
+  issues: GithubIssue[];
+  issueMetadata: IssueMetadata[];
 }
-
 const IssueDetailPage = (props: IssueDetailPageProps) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const findIssueByNumber = (number: string) => props.issues.find((issue: Issue) => issue.number.toString() === number);
+  const getFullIssueByNumber = (number: string) => {
+    const issue = props.issues.find((issue: GithubIssue) => issue.number.toString() === number);
+    const issueMetadata = props.issueMetadata.find((issueMetadata: IssueMetadata) => issueMetadata.number.toString() === number);
 
-  const currentIssue = useMemo(() => findIssueByNumber(params.number), [props.issues, params.number]);
+    return { issue, issueMetadata };
+  };
+
+  const currentIssue = useMemo(() => getFullIssueByNumber(params.number), [props.issues, params.number]);
 
   const backButtonHandler = React.useCallback((e) => {
     e.preventDefault();
@@ -28,7 +34,7 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
 
 
   useEffect(() => {
-    const handleMessage = async (e) => {
+    window.onmessage = async (e) => {
       const pluginMessage = e.data.pluginMessage;
 
       console.log(`Received message from figma: ${pluginMessage.type}`);
@@ -36,42 +42,41 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
       switch (pluginMessage.type) {
         case 'create-frame': {
           // Persist the created frame in the current issue
-          const updatedIssue: Issue = {
-            ...currentIssue,
-            status: IssueStatus.IN_PROGRESS,
-            frames: [...currentIssue.frames as string[], e.data.pluginMessage.message],
+          const updatedIssueMetadata: IssueMetadata = {
+            ...currentIssue.issueMetadata,
+            progress: MockupProgress.IN_PROGRESS,
+            frames: [...currentIssue.issueMetadata.frames as string[], e.data.pluginMessage.message],
           };
 
-          const updatedIssues = props.issues.map((issue) =>
-            issue.number.toString() === params.number ? updatedIssue : issue
+          // TODO: might be unnecessary
+          props.issueMetadata = props.issueMetadata.map((issue: IssueMetadata) =>
+              issue.number.toString() === params.number ? updatedIssueMetadata : issue
           );
-
-          props.updateIssuesState(updatedIssues);
-          await updateIssue(updatedIssue);
+          await updateIssueMetadata(updatedIssueMetadata);
           break;
         }
         case 'export-prototype': {
           const exportedBytes: Uint8Array[] = e.data.pluginMessage.message;
           const prototypeURLs: string[] = [];
 
-          exportedBytes.forEach(async (bytes) => {
+          for (const bytes of exportedBytes) {
             const response = await postPrototype(bytes);
             prototypeURLs.push(response.url);
-          });
+          }
 
           console.log("Prototype URLs: ", prototypeURLs);
 
           // Persist the prototype urls in the current issue
-          const updatedIssue: Issue = {
-            ...currentIssue,
-            prototypeUrls: [...currentIssue.prototypeUrls as string[], ...prototypeURLs],
+          const updatedIssueMetadata: IssueMetadata = {
+            ...currentIssue.issueMetadata,
+            prototypeUrls: [...currentIssue.issueMetadata.prototypeUrls as string[], ...prototypeURLs],
           };
 
-          const persistedIssue = await updateIssue(updatedIssue);
-          
+          const persistedIssue = await updateIssueMetadata(updatedIssueMetadata);
+
           // Inform the plugin that the prototypes have been persisted
           await confirmPrototypes(persistedIssue)
-          
+
           break;
         }
         default: {
@@ -79,8 +84,6 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
         }
       }
     };
-
-    window.onmessage = handleMessage;
 
     return () => {
       // Cleanup when unmounting
@@ -120,7 +123,7 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
             letterSpacing: '0.14px',
             lineHeight: '20px',
           }}>
-          {"#" + currentIssue.number}
+          {"#" + currentIssue.issue.number}
           </Type>
 
           {/* --- TITLE --- */}
@@ -133,7 +136,7 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
             letterSpacing: '0.14px',
             lineHeight: '20px',
           }}>
-          {currentIssue.title}
+          {currentIssue.issue.title}
           </Type>
         </div>
     
@@ -156,7 +159,7 @@ const IssueDetailPage = (props: IssueDetailPageProps) => {
       <div style={{
         padding: '20px 10px',
       }}>
-        <VerticalStepper currentIssue={currentIssue} />
+        <VerticalStepper issue={currentIssue.issue} issueMetadata={currentIssue.issueMetadata} />
       </div>
 
     </div>

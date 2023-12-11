@@ -1,5 +1,5 @@
 {
-  "name": "uicompanion-plugin",
+  "name": "@ls1intum/uicompanion-plugin",
   "version": "1.0.0",
   "scripts": {
     "build": "webpack --mode=production",
@@ -13,6 +13,8 @@
     "@ls1intum/uicompanion-shared": "^1.0.0",
     "@mui/joy": "^5.0.0-beta.4",
     "@mui/material": "^5.14.5",
+    "@octokit/core": "^5.0.2",
+    "@octokit/types": "^12.4.0",
     "axios": "^1.4.0",
     "file-system": "^2.2.2",
     "form-data": "^4.0.0",

@@ -1,26 +1,6 @@
-import { Document, Schema } from 'mongoose'
+import { Schema } from 'mongoose'
 
-export interface Issue {
-    repository_url: string;
-    number: number;
-    title: string;
-    description: string;
-    status: string;
-    frames: string[];
-    prototypeUrls: string[];
-}
-
-export interface IIssue extends Document {
-    repository_url: string;
-    number: number;
-    title: string;
-    description: string;
-    status: string;
-    frames: string[];
-    prototypeUrls: string[];
-}
-
-export const issueSchema = new Schema({
+export const issueMetadataSchema = new Schema({
     repository_url: {
         type: String,
         required: true,

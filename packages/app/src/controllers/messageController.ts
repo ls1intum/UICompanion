@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { Issue } from "@ls1intum/uicompanion-shared/models/Issue";
 import { commentPrototypesOnGithub } from '../services/githubService';
+import IssueMetadata from '@ls1intum/uicompanion-shared/models/IssueMetadata';
 
 export class MessageController {
 
     public async handlePrototypeMessage(req: Request, res: Response): Promise<void> {
-        const issue: Issue = req.body;
+        const issue: IssueMetadata = req.body;
         
         try {
             await commentPrototypesOnGithub(issue).then(() => {

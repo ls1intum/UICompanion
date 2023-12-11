@@ -1,9 +1,9 @@
+import IssueMetadata from '@ls1intum/uicompanion-shared/models/IssueMetadata';
 import axios from 'axios';
-import { Issue } from '@ls1intum/uicompanion-shared/models/Issue';
 
 const baseUrl = process.env.NODE_ENV == 'production' ? 'https://uicompanion.ase.cit.tum.de' : 'http://localhost:3001';
 
-export async function getIssues(): Promise<Issue[]> {
+export async function getIssueMetadata(): Promise<IssueMetadata[]> {
   try {
     const response = await axios.get(`${baseUrl}/api/issues`);
     return response.data.issues;
@@ -12,9 +12,9 @@ export async function getIssues(): Promise<Issue[]> {
   }
 } 
 
-export async function updateIssue(issue: Issue): Promise<Issue> {
+export async function updateIssueMetadata(issueMetadata: IssueMetadata): Promise<IssueMetadata> {
   try {
-    const response = await axios.patch(`${baseUrl}/api/issues/${issue.number}`, issue);
+    const response = await axios.patch(`${baseUrl}/api/issues/${issueMetadata.number}`, issueMetadata);
     return response.data;
   } catch (error) {
     throw new Error(error);

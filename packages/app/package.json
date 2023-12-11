@@ -1,5 +1,5 @@
 {
-  "name": "uicompanion-app",
+  "name": "@ls1intum/uicompanion-app",
   "version": "1.0.0",
   "scripts": {
     "build": "tsc --build",
