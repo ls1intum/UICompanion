@@ -7,9 +7,10 @@ import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
 import { Button, Type } from 'react-figma-ui';
 import { Stack, StepConnector, stepConnectorClasses, styled } from '@mui/material';
-import { issueStatusToIndex } from '../../models/IssueStatus';
-import { Issue } from '../../models/Issue';
 import { Chip, ChipDelete } from '@mui/joy';
+import GithubIssue from "@ls1intum/uicompanion-shared/models/GithubIssue";
+import IssueMetadata from "@ls1intum/uicompanion-shared/models/IssueMetadata";
+import {mockupProgressToIndex} from "@ls1intum/uicompanion-shared/enums/MockupProgress";
 
 const steps = [
     {
@@ -57,24 +58,31 @@ const CustomConnector = styled(StepConnector)(() => ({
 }));
 
 interface VerticalStepperProps {
-    currentIssue: Issue;
+    issue: GithubIssue;
+    issueMetadata: IssueMetadata;
 }
 
-export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
-    const [activeStep, setActiveStep] = React.useState(issueStatusToIndex[currentIssue.status]);
+export const VerticalStepper = ({ issue, issueMetadata }: VerticalStepperProps) => {
+    const [activeStep, setActiveStep] = React.useState(mockupProgressToIndex[issueMetadata.progress]);
 
     const handleCreate = () => {
-        parent.postMessage({ pluginMessage: { type: 'create-frame', currentIssue } }, '*');  
+        parent.postMessage({ pluginMessage: { type: 'create-frame', issue: issue } }, '*');
         
         handleNext();
     }
 
+    const handleSubmit = () => {
+        parent.postMessage({ pluginMessage: { type: 'export-prototype', issue: issue } }, '*');
+
+        handleNext();
+    }
+
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
     };
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
     };
 
     const renderActionButtons = React.useCallback((index: Number) => {
@@ -129,7 +137,7 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
                     }}>
                         <Button
                             tint='primary'
-                            onClick={handleNext}
+                            onClick={handleSubmit}
                         >
                             Submit Mockup
                         </Button>
@@ -140,9 +148,9 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
                 return null;
 
         }
-    }, [status]);
+    }, []);
 
-    function AvailableFrames(props) {
+    function AvailableFrames(props: { index: any; }) {
         const index = props.index;
 
         if (index === 1) {
@@ -151,7 +159,7 @@ export const VerticalStepper = ({ currentIssue }: VerticalStepperProps) => {
                     direction="row"
                     spacing={1}
                 >
-                    {currentIssue.frames
+                    {issueMetadata.frames
                         .map((frame: string) => (
                             <Chip
                                 key={frame}

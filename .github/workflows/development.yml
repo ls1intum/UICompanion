@@ -1,19 +1,19 @@
-name: Build and Deploy to Development
-
-on:
-  pull_request:
-    branches: [main]
-
-jobs:
-  build-dev-container:
-    uses: ./.github/workflows/build-docker-images.yml
-    secrets: inherit
-  deploy-dev-container:
-    needs: build-dev-container
-    uses: ./.github/workflows/deploy-docker-images.yml
-    secrets: inherit
-    with:
-      environment: Production
-      server_image_tag: "${{ needs.build-dev-container.outputs.server_image_tag }}"
-      app_image_tag: "${{ needs.build-dev-container.outputs.app_image_tag }}"
+#name: Build and Deploy to Development
+#
+#on:
+#  pull_request:
+#    branches: [main]
+#
+#jobs:
+#  build-dev-container:
+#    uses: ./.github/workflows/build-docker-images.yml
+#    secrets: inherit
+#  deploy-dev-container:
+#    needs: build-dev-container
+#    uses: ./.github/workflows/deploy-docker-images.yml
+#    secrets: inherit
+#    with:
+#      environment: Production
+#      server_image_tag: "${{ needs.build-dev-container.outputs.server_image_tag }}"
+#      app_image_tag: "${{ needs.build-dev-container.outputs.app_image_tag }}"
     

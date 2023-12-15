@@ -1,14 +1,10 @@
-import { Document, Schema, Model, model, Error } from 'mongoose'
+import { Schema } from 'mongoose'
 
-export interface IIssue extends Document {
-    number: number;
-    title: string;
-    description: string;
-    status: string;
-    frames: string[];
-}
-
-const issueSchema = new Schema({
+export const issueMetadataSchema = new Schema({
+    repository_url: {
+        type: String,
+        required: true,
+    },
     number: {
         type: Number,
         required: true,
@@ -31,6 +27,8 @@ const issueSchema = new Schema({
         type: [String],
         required: true,
     },
+    prototypeUrls: {
+        type: [String],
+        required: true,
+    },
 });
-
-export const Issue: Model<IIssue> = model<IIssue>('Issue', issueSchema);

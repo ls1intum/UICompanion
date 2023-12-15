@@ -1,23 +1,21 @@
 import axios from 'axios';
-import { Probot } from 'probot';
-import { Issue as GitHubIssue } from "@octokit/webhooks-types"
-import { IssueStatus } from '../models/IssueStatus';
-import { Issue } from '../models/Issue';
+import {Probot} from 'probot';
+import {Issue as GitHubIssue} from "@octokit/webhooks-types"
+import IssueMetadata from '@ls1intum/uicompanion-shared/models/IssueMetadata';
+import MockupProgress from "@ls1intum/uicompanion-shared/enums/MockupProgress";
 
 
 export async function persistIssue(
     app: Probot,
     issue: GitHubIssue
 ): Promise<void> {
-  let data: Issue = {
+  let data: IssueMetadata = {
+    repository_url: issue.repository_url,
     number: issue.number,
-    title: issue.title,
-    description: issue.body || '',
-    status: IssueStatus.OPEN,
-    frames: []
+    progress: MockupProgress.OPEN,
+    frames: [],
+    prototypeUrls: [],
   };
-
-  app.log.debug("POST Data: ", data);
 
   axios.post(
     'http://uicompanion-server:3001/api/issues',
