@@ -32,7 +32,7 @@ module.exports = (app: Probot, { getRouter }: any) => {
       await context.octokit.issues.createComment(issueComment);
 
       // Persist issue on application server
-      persistIssue(app, issue);
+      await persistIssue(app, issue);
 
     } else {
       app.log.error('No comment created')
