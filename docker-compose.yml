@@ -13,13 +13,20 @@ services:
       - ./mongo-data:/data/db
   uicompanion-server:
     container_name: uicompanion-server
+    image: uicompanion-server
     depends_on:
       - mongodb
-    build:
-      context: ./packages/server
-      args:
-        - NPM_TOKEN=$NPM_TOKEN
     restart: on-failure
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - NODE_VERSION=18
+        - APP_NAME=uicompanion-server
+        - PORT=3001
+    volumes:
+      - ./apps/uicompanion-server:/app/apps/uicompanion-server
+      - /app/apps/uicompanion-server/node_modules
     ports:
       - "3001:3001"
     environment:
@@ -32,20 +39,28 @@ services:
 
   uicompanion-app:
     container_name: uicompanion-app
+    image: uicompanion-app
     depends_on: 
       - uicompanion-server
-    build:
-      context: ./packages/app
-      args:
-        - NPM_TOKEN=$NPM_TOKEN
     restart: on-failure
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - NODE_VERSION=19
+        - APP_NAME=uicompanion-app
+        - PORT=3001
+    volumes:
+      - ./apps/uicompanion-app:/app/apps/uicompanion-app
+      - /app/apps/uicompanion-app/node_modules
     ports:
       - "3000:3000"
     environment:
       - LOG_LEVEL_IN_STRING=$LOG_LEVEL_IN_STRING
+      - LOG_LEVEL=$LOG_LEVEL
       - WEBHOOK_PROXY_URL=$WEBHOOK_PROXY_URL
       - APP_ID=$APP_ID
       - WEBHOOK_SECRET=$WEBHOOK_SECRET
       - GH_CLIENT_ID=$GH_CLIENT_ID
       - GH_CLIENT_SECRET=$GH_CLIENT_SECRET
-      - PRIVATE_KEY_PATH=$PRIVATE_KEY_PATH
+      - PRIVATE_KEY=$PRIVATE_KEY
