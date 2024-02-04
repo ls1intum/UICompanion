@@ -4,7 +4,7 @@ import {IssueMetadata} from "@repo/shared";
 
 export async function commentPrototypesOnGithub(issue: IssueMetadata): Promise<void> {
     const url = `${issue.repository_url}/issues/${issue.number}/comments`;
-    const comment = issue.prototypeUrls.map(url => `![Bild](${url})`).join('\n');
+    const comment = issue.prototypeUrls.map((url: any) => `![Bild](${url})`).join('\n');
 
     try {
         const response = await axios.post(url, { body: comment }, {

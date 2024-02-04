@@ -17,14 +17,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./packages/app/Dockerfile
+          - dockerfile: ./Dockerfile
             image: ghcr.io/ls1intum/UICompanion/uicompanion-app
-            context: ./packages/app
-            path: app
-          - dockerfile: ./packages/server/Dockerfile
+            context: ./apps/uicompanion-app
+            path: uicompanion-app
+          - dockerfile: ./Dockerfile
             image: ghcr.io/ls1intum/UICompanion/uicompanion-server
-            context: ./packages/server
-            path: server
+            context: ./apps/uicompanion-server
+            path: uicompanion-server
     outputs:
       server_image_tag: "${{ steps.output-tag-server.outputs.server_image_tag }}"
       app_image_tag: "${{ steps.output-tag-app.outputs.app_image_tag }}"
@@ -53,20 +53,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get changed files in the app folder
-        id: changed-files-app-package
+      - name: Get changed files in the uicompanion-app folder
+        id: changed-files-uicompanion-app
         uses: tj-actions/changed-files@v36
         with:
-          files: packages/app/*
+          files: apps/uicompanion-app/*
 
-      - name: Get changed files in the server folder
-        id: changed-files-server-package
+      - name: Get changed files in the uicompanion-server folder
+        id: changed-files-uicompanion-server
         uses: tj-actions/changed-files@v36
         with:
-          files: packages/server/*
+          files: apps/uicompanion-server/*
 
       - name: Log in to the Container registry
-        if: ${{ (steps.changed-files-app-package.outputs.any_changed == 'true') || (steps.changed-files-server-package.outputs.any_changed == 'true') }}
+        if: ${{ (steps.changed-files-uicompanion-app.outputs.any_changed == 'true') || (steps.changed-files-uicompanion-server.outputs.any_changed == 'true') }}
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
@@ -74,23 +74,23 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up QEMU
-        if: ${{ (steps.changed-files-app-package.outputs.any_changed == 'true') || (steps.changed-files-server-package.outputs.any_changed == 'true') }}
+        if: ${{ (steps.changed-files-uicompanion-app.outputs.any_changed == 'true') || (steps.changed-files-uicompanion-server.outputs.any_changed == 'true') }}
         uses: docker/setup-qemu-action@v2
         with:
           platforms: all
 
       - name: Install Docker Buildx
-        if: ${{ (steps.changed-files-app-package.outputs.any_changed == 'true') || (steps.changed-files-server-package.outputs.any_changed == 'true') }}
+        if: ${{ (steps.changed-files-uicompanion-app.outputs.any_changed == 'true') || (steps.changed-files-uicompanion-server.outputs.any_changed == 'true') }}
         id: buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Downcase Image Tag
-        if: ${{ (steps.changed-files-app-package.outputs.any_changed == 'true') || (steps.changed-files-server-package.outputs.any_changed == 'true') }}
+        if: ${{ (steps.changed-files-uicompanion-app.outputs.any_changed == 'true') || (steps.changed-files-uicompanion-server.outputs.any_changed == 'true') }}
         run: echo "IMAGE_TAG=$(echo ${{ matrix.image }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build and push Docker Image
         uses: docker/build-push-action@v4
-        if: ${{ (steps.changed-files-app-package.outputs.any_changed == 'true' && matrix.path == 'app') || (steps.changed-files-server-package.outputs.any_changed == 'true' && matrix.path == 'server') }}
+        if: ${{ (steps.changed-files-uicompanion-app.outputs.any_changed == 'true' && matrix.path == 'uicompanion-app') || (steps.changed-files-uicompanion-server.outputs.any_changed == 'true' && matrix.path == 'uicompanion-server') }}
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
@@ -98,31 +98,35 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_TAG }}:${{ steps.compute-tag.outputs.result }}
           build-args: |
+            "APP_NAME"="${{ matrix.path }}"
             "MONGODB_USER"="${{ vars.MONGODB_USER }}"
             "MONGODB_PASSWORD"="${{ secrets.MONGODB_PASSWORD }}"
             "MONGODB_DATABASE"="${{ vars.MONGODB_DATABASE }}"
             "MONGODB_HOST"="${{ vars.MONGODB_HOST }}"
             "MONGODB_PORT"="${{ vars.MONGODB_PORT }}"
-            "LOG_LEVEL_IN_STRING"="${{ vars.LOG_LEVEL_IN_STRING }}"
-            "WEBHOOK_URL"="${{ vars.WEBHOOK_URL }}"
             "APP_ID"="${{ vars.APP_ID }}"
-            "PRIVATE_KEY"="${{ secrets.PRIVATE_KEY }}"
             "WEBHOOK_SECRET"="${{ secrets.WEBHOOK_SECRET }}"
             "GH_CLIENT_ID"="${{ secrets.GH_CLIENT_ID }}"
             "GH_CLIENT_SECRET"="${{ secrets.GH_CLIENT_SECRET }}"
+            "LOG_LEVEL_IN_STRING"="${{ vars.LOG_LEVEL_IN_STRING }}"
+            "WEBHOOK_PATH"="${{ vars.WEBHOOK_PATH }}"
+            "WEBHOOK_URL"="${{ vars.WEBHOOK_URL }}"
+            "PRIVATE_KEY"="${{ secrets.PRIVATE_KEY }}"
+            
+            
 
       - id: output-tag-app
         run: |
-          if [[ "${{ matrix.path }}" == "app" ]] && [[ "${{ steps.changed-files-app-package.outputs.any_changed }}" == "true" ]]; then
+          if [[ "${{ matrix.path }}" == "uicompanion-app" ]] && [[ "${{ steps.changed-files-uicompanion-app.outputs.any_changed }}" == "true" ]]; then
             echo "app_image_tag=${{ steps.compute-tag.outputs.result }}" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ matrix.path }}" == "app" ]]; then
+          elif [[ "${{ matrix.path }}" == "uicompanion-app" ]]; then
             echo "app_image_tag=latest" >> "$GITHUB_OUTPUT"
           fi
       
       - id: output-tag-server
         run: |
-          if [[ "${{ matrix.path }}" == "server" ]] && [[ "${{ steps.changed-files-server-package.outputs.any_changed }}" == "true" ]]; then
+          if [[ "${{ matrix.path }}" == "uicompanion-server" ]] && [[ "${{ steps.changed-files-uicompanion-server.outputs.any_changed }}" == "true" ]]; then
             echo "server_image_tag=${{ steps.compute-tag.outputs.result }}" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ matrix.path }}" == "server" ]]; then
+          elif [[ "${{ matrix.path }}" == "uicompanion-server" ]]; then
             echo "server_image_tag=latest" >> "$GITHUB_OUTPUT"
           fi

@@ -10,15 +10,7 @@ export const issueMetadataSchema = new Schema({
     required: true,
     unique: true,
   },
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: false,
-  },
-  status: {
+  progress: {
     type: String,
     required: true,
     enum: ['Open', 'In Progress', 'In Review', 'Approved'],

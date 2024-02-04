@@ -1,8 +1,10 @@
 {
-  "name": "UICompanion",
-  "id": "00000000",
   "api": "1.0.0",
-  "main": "dist/code.js",
-  "ui": "dist/ui.html",
-  "editorType": ["figma"]
+  "editorType": [
+    "figma"
+  ],
+  "id": "uicompanion-plugin",
+  "name": "UICompanion",
+  "main": "build/main.js",
+  "ui": "build/ui.js"
 }
