@@ -76,12 +76,13 @@ jobs:
             echo "LOG_LEVEL_IN_STRING=${{ vars.LOG_LEVEL_IN_STRING }}" >> .env.prod
             echo "WEBHOOK_PATH=${{ vars.WEBHOOK_PATH }}" >> .env.prod
             echo "APP_ID=${{ vars.APP_ID }}" >> .env.prod
-            echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env.prod
+            echo "PRIVATE_KEY=\"${{ secrets.PRIVATE_KEY }}\"" >> .env.prod
             echo "WEBHOOK_SECRET=${{ secrets.WEBHOOK_SECRET }}" >> .env.prod
             echo "GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> .env.prod
             echo "GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> .env.prod
 
             echo "HOST_ALIAS=${{ vars.HOST_ALIAS }}" >> .env.prod
+            echo "SERVER_BASE_URL=${{ vars.SERVER_BASE_URL }}" >> .env.prod
 
             echo "SERVER_IMAGE_TAG=${{ inputs.server_image_tag }}" >> .env.prod
             echo "APP_IMAGE_TAG=${{ inputs.app_image_tag }}" >> .env.prod

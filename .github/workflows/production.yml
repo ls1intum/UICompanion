@@ -16,4 +16,4 @@ jobs:
       environment: Production
       server_image_tag: "latest"
       app_image_tag: "latest"
-    
+      

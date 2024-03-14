@@ -50,6 +50,8 @@ services:
       - MONGODB_DATABASE=$MONGODB_DATABASE
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+      - SERVER_BASE_URL=$SERVER_BASE_URL
+      - NPM_TOKEN=$NPM_TOKEN
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server.rule=Host(`${HOST_ALIAS}`) && PathPrefix(`/api`)"
@@ -75,6 +77,7 @@ services:
       - WEBHOOK_SECRET=$WEBHOOK_SECRET
       - GH_CLIENT_ID=$GH_CLIENT_ID
       - GH_CLIENT_SECRET=$GH_CLIENT_SECRET
+      - NPM_TOKEN=$NPM_TOKEN
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app.rule=Host(`${HOST_ALIAS}`)"

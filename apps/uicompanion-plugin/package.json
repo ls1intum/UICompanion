@@ -1,0 +1,39 @@
+{
+  "name": "@ls1intum/uicompanion-plugin",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "tailwindcss --input ./src/input.css --output ./build/output.css",
+    "build:js": "build-figma-plugin --minify",
+    "watch": "npm run build:css && concurrently npm:watch:css npm:watch:js",
+    "watch:css": "tailwindcss --input ./src/input.css --output ./build/output.css --watch",
+    "watch:js": "build-figma-plugin --watch"
+  },
+  "dependencies": {
+    "@create-figma-plugin/ui": "^3.1.0",
+    "@create-figma-plugin/utilities": "^3.1.0",
+    "@octokit/core": "^5.1.0",
+    "@octokit/types": "^12.4.0",
+    "@repo/shared": "workspace:*",
+    "axios": "^1.4.0",
+    "preact": ">=10"
+  },
+  "devDependencies": {
+    "@create-figma-plugin/build": "^3.1.0",
+    "@create-figma-plugin/tsconfig": "^3.1.0",
+    "@figma/plugin-typings": "1.82.0",
+    "concurrently": ">=8",
+    "react-router-dom": "^6.22.0",
+    "tailwindcss": ">=3",
+    "typescript": ">=4"
+  },
+  "figma-plugin": {
+    "editorType": [
+      "figma"
+    ],
+    "id": "uicompanion-plugin",
+    "name": "UICompanion",
+    "main": "src/main.ts",
+    "ui": "src/ui.tsx"
+  }
+}
